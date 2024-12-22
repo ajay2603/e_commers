@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import AuthContext from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("consumer");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();
+  const { setToken, setLoggedIn } = useContext(AuthContext); // For navigation
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,22 +20,24 @@ const Login = () => {
         password,
         type: role,
       });
-  
+
       const data = response.data;
       console.log("Login response:", data);
-  
+      setToken(data.token);
+      setLoggedIn(true);
+
       const userRole = data.userType?.toLowerCase(); // Case-insensitive comparison
       console.log("User role:", userRole);
-  
+
       if (userRole === "consumer" || userRole === "seller") {
         // Store the token in localStorage
         localStorage.setItem("token", data.token);
-  
+
         // Navigate based on the user role
         if (userRole === "consumer") {
           navigate("/consumer-dashboard");
         } else if (userRole === "seller") {
-          navigate("/seller-dashboard");
+          navigate("/seller");
         }
       } else {
         setErrorMessage("Invalid role type");
@@ -45,14 +49,13 @@ const Login = () => {
       );
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
         {errorMessage && (
-          <p className="text-sm text-red-600 text-center">{errorMessage}</p>
+          <p className="text-sm text-center text-red-600">{errorMessage}</p>
         )}
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>
