@@ -4,11 +4,13 @@ import axios from 'axios';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('consumer');
+    // const [address, setAddress] = useState(''); // Added state for address
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/login', { email, password });
+            const response = await axios.post('/api/login', { email, password, role, address });
             console.log('Login successful:', response.data);
         } catch (error) {
             console.error('Error logging in:', error);
@@ -40,6 +42,26 @@ const Login = () => {
                             placeholder="Enter your password"
                         />
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Role</label>
+                        <select
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                            className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                        >
+                            <option value="consumer">Consumer</option>
+                            <option value="seller">Seller</option>
+                        </select>
+                    </div>
+                    {/* <div>
+                        <label className="block text-sm font-medium text-gray-700">Address</label>
+                        <textarea
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                            placeholder="Enter your address"
+                        ></textarea>
+                    </div> */}
                     <button
                         type="submit"
                         className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
@@ -54,4 +76,5 @@ const Login = () => {
         </div>
     );
 };
+
 export default Login
