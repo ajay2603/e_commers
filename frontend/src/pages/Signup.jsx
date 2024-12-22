@@ -15,7 +15,7 @@ const Signup = () => {
             return;
         }
         try {
-            const response = await axios.post('/api/signup', { username, email, password, role, address });
+            const response = await axios.post('/auth/register', { username, email, password, type: role, address });
             console.log('Signup successful:', response.data);
         } catch (error) {
             console.error('Error signing up:', error);
