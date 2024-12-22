@@ -20,6 +20,8 @@ const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
 const productRoutes = require("./routes/product");
 app.use("/products", productRoutes);
+const sellerRoutes = require("./routes/seller");
+app.use("/sellers", sellerRoutes);
 
 mongoose
   .connect(process.env.MONGODB_URI)

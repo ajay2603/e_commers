@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const authSellerToken = require("../controller/authSellerToken");
-const addProduct = require("../controller/addProduct");
-const getProducts = require("../controller/getProducts");
+const productController = require("../controller/product");
 
-router.post("/add", authSellerToken, addProduct);
-router.get("/", getProducts);
+router.post("/add", authSellerToken, productController.addProduct);
+router.get("/", productController.getProducts);
+router.get("/:id", productController.getProductDetails);
 module.exports = router;
