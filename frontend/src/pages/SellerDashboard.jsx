@@ -12,6 +12,7 @@ const SellerDashboard = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [token, setToken] = useState(""); // State to hold the token
   const [products, setProducts] = useState([]); // State to hold the list of products
+  const [loading, setLoading] = useState(true); // To handle loading state for products
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token"); // Get the token from localStorage
@@ -23,15 +24,30 @@ const SellerDashboard = () => {
 
     // Fetch the products from the database when the component mounts
     const fetchProducts = async () => {
+      if (!token) {
+        setErrorMessage("Please login to see products.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await axios.get("http://localhost:5000/products");
-        setProducts(response.data);
+        setLoading(true); // Set loading state to true before fetching
+        const response = await axios.get("http://localhost:5000/products", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass token in headers for authorization
+          },
+        });
+        setProducts(response.data); // Set fetched products into state
+        setLoading(false); // Set loading state to false after data is fetched
       } catch (error) {
         console.error("Error fetching products:", error);
+        setErrorMessage("Failed to fetch products. Please try again.");
+        setLoading(false); // Set loading state to false in case of error
       }
     };
+
     fetchProducts();
-  }, [token]);
+  }, [token]); // Fetch products only when token changes
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,10 +81,13 @@ const SellerDashboard = () => {
         }
       );
       setSuccessMessage("Product added successfully!");
-      Alert("Product added successfully!");
 
       // Fetch the updated list of products
-      const updatedProducts = await axios.get("http://localhost:5000/products");
+      const updatedProducts = await axios.get("http://localhost:5000/products", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token in the request header
+        },
+      });
       setProducts(updatedProducts.data);
 
       // Clear form inputs after submission
@@ -180,7 +199,9 @@ const SellerDashboard = () => {
         <div className="lg:w-1/2 w-full bg-white p-8 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Products List</h2>
           <div className="space-y-4">
-            {products.length > 0 ? (
+            {loading ? (
+              <p className="text-center text-gray-600">Loading products...</p>
+            ) : products.length > 0 ? (
               products.map((product) => (
                 <div
                   key={product._id}
