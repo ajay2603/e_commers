@@ -37,7 +37,8 @@ const SellerDashboard = () => {
             Authorization: `Bearer ${token}`, // Pass token in headers for authorization
           },
         });
-        setProducts(response.data); // Set fetched products into state
+
+        setProducts(response.data.products); // Set fetched products into state
         setLoading(false); // Set loading state to false after data is fetched
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -83,11 +84,14 @@ const SellerDashboard = () => {
       setSuccessMessage("Product added successfully!");
 
       // Fetch the updated list of products
-      const updatedProducts = await axios.get("http://localhost:5000/products", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Send token in the request header
-        },
-      });
+      const updatedProducts = await axios.get(
+        "http://localhost:5000/products",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in the request header
+          },
+        }
+      );
       setProducts(updatedProducts.data);
 
       // Clear form inputs after submission
@@ -106,20 +110,28 @@ const SellerDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="flex flex-col lg:flex-row gap-8">
+    <div className="min-h-screen p-8 bg-gray-100">
+      <div className="flex flex-col gap-8 lg:flex-row">
         {/* Form Section - Left */}
-        <div className="lg:w-1/2 w-full bg-white p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-center text-gray-800">Add Product</h2>
+        <div className="w-full p-8 bg-white rounded-lg shadow-md lg:w-1/2">
+          <h2 className="text-2xl font-bold text-center text-gray-800">
+            Add Product
+          </h2>
           {errorMessage && (
-            <p className="text-sm text-red-600 text-center mt-4">{errorMessage}</p>
+            <p className="mt-4 text-sm text-center text-red-600">
+              {errorMessage}
+            </p>
           )}
           {successMessage && (
-            <p className="text-sm text-green-600 text-center mt-4">{successMessage}</p>
+            <p className="mt-4 text-sm text-center text-green-600">
+              {successMessage}
+            </p>
           )}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Product Name</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Product Name
+              </label>
               <input
                 type="text"
                 value={name}
@@ -130,7 +142,9 @@ const SellerDashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Description
+              </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -140,7 +154,9 @@ const SellerDashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Stock</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Stock
+              </label>
               <input
                 type="number"
                 value={stock}
@@ -151,7 +167,9 @@ const SellerDashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Price</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Price
+              </label>
               <input
                 type="number"
                 value={price}
@@ -162,7 +180,9 @@ const SellerDashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Image URL</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Image URL
+              </label>
               <input
                 type="text"
                 value={image}
@@ -173,7 +193,9 @@ const SellerDashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Category
+              </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -196,8 +218,10 @@ const SellerDashboard = () => {
         </div>
 
         {/* Products List - Right */}
-        <div className="lg:w-1/2 w-full bg-white p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Products List</h2>
+        <div className="w-full p-8 bg-white rounded-lg shadow-md lg:w-1/2">
+          <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
+            Products List
+          </h2>
           <div className="space-y-4">
             {loading ? (
               <p className="text-center text-gray-600">Loading products...</p>
@@ -205,22 +229,26 @@ const SellerDashboard = () => {
               products.map((product) => (
                 <div
                   key={product._id}
-                  className="p-4 border border-gray-300 rounded-md flex items-center space-x-4"
+                  className="flex items-center p-4 space-x-4 border border-gray-300 rounded-md"
                 >
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-20 h-20 object-cover rounded-md"
+                    className="object-cover w-20 h-20 rounded-md"
                   />
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold">{product.name}</h3>
                     <p className="text-sm text-gray-600">{product.category}</p>
-                    <p className="text-sm text-gray-800">Price: ${product.price}</p>
+                    <p className="text-sm text-gray-800">
+                      Price: ${product.price}
+                    </p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-600">No products added yet.</p>
+              <p className="text-center text-gray-600">
+                No products added yet.
+              </p>
             )}
           </div>
         </div>
