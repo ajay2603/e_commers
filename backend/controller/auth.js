@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const register = async (req, res) => {
   try {
+    console.log(req.body);
     const { name, email, password, confirmPassword, type, address } = req.body;
 
     // Validation: Check if all fields are provided
