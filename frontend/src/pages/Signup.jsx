@@ -1,7 +1,7 @@
 import react,{useState} from 'react';
 import axios from 'axios';
 const Signup = () => {
-    const [username, setUsername] = useState('');
+    const [name, setname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,7 +15,7 @@ const Signup = () => {
             return;
         }
         try {
-            const response = await axios.post('/api/signup', { username, email, password, role, address });
+            const response = await axios.post('http://localhost:5000/auth/register', { name, email, password, type:role, address });
             console.log('Signup successful:', response.data);
         } catch (error) {
             console.error('Error signing up:', error);
@@ -28,13 +28,13 @@ const Signup = () => {
                 <h2 className="text-2xl font-bold text-center text-gray-800">Sign Up</h2>
                 <form className="space-y-4" onSubmit={handleSignup}>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Username</label>
+                        <label className="block text-sm font-medium text-gray-700">name</label>
                         <input
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={name}
+                            onChange={(e) => setname(e.target.value)}
                             className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border rounded-md focus:ring-2 focus:ring-green-400 focus:outline-none"
-                            placeholder="Enter your username"
+                            placeholder="Enter your name"
                         />
                     </div>
                     <div>
