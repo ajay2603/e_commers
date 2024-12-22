@@ -24,6 +24,7 @@ const Signup = () => {
         address,
       });
       console.log("Signup successful:", response.data);
+      alert("Signup successful!");
     } catch (error) {
       console.error("Error signing up:", error);
     }
