@@ -27,6 +27,10 @@ app.use("/cart", cartRoutes);
 const orderRoutes = require("./routes/order");
 app.use("/orders", orderRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the backend server");
+});
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then((_) => console.log("Connected to MongoDB"))
