@@ -2,15 +2,17 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import API_BASE_URL from "../const";
 
 const ConsumerDashboard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([
-    "electronics",
-    "clothing",
-    "accessories",
-    "books",
+    "men",
+    "women",
+    "kids",
+    "jewellery",
+    "footware",
     "others",
   ]); // Predefined categories
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -22,7 +24,7 @@ const ConsumerDashboard = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/products", {
+      const response = await axios.get(`${API_BASE_URL}/products`, {
         params: {
           category: selectedCategory,
           minPrice,
@@ -51,7 +53,7 @@ const ConsumerDashboard = () => {
       }
 
       await axios.post(
-        "http://localhost:5000/cart/add",
+        `${API_BASE_URL}/cart/add`,
         { productId, quantity: 1 },
         {
           headers: { Authorization: `Bearer ${token}` },

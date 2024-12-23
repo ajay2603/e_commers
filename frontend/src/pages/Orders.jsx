@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import AuthContext from "../context/AuthContext"; // Assuming you have a context for authentication
-
-const API_URL = "http://localhost:5000"; // Update this with the correct API URL
+import AuthContext from "../context/AuthContext";
+import API_URL from "../const";
+// Update this with the correct API URL
 
 const Orders = () => {
   const { token } = useContext(AuthContext); // Get the token from context

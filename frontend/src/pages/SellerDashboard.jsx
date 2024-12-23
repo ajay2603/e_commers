@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom"; // Import Link for navigation
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
+import API_BASE_URL from "../const"; // Import the base URL
 
 const SellerDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -16,7 +17,7 @@ const SellerDashboard = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:5000/products", {
+        const response = await axios.get(`${API_BASE_URL}/products`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProducts(response.data.products);
@@ -47,7 +48,7 @@ const SellerDashboard = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/products/add-stock/${productId}`,
+        `${API_BASE_URL}/products/add-stock/${productId}`,
         { stock: parseInt(stock) }, // Sending the stock (positive or negative) to backend
         {
           headers: {

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import API_BASE_URL from "../const"; // Import the base URL
 
 const ProductDetailsPage = () => {
   const { id } = useParams(); // Get product ID from the URL
   const [product, setProduct] = useState(null);
   const [seller, setSeller] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -18,20 +17,20 @@ const ProductDetailsPage = () => {
 
         // Fetch the product details by ID
         const productResponse = await axios.get(
-          `http://localhost:5000/products/${id}`
+          `${API_BASE_URL}/products/${id}`
         );
         setProduct(productResponse.data.product);
 
         // Fetch the seller's details (using the seller ID from product)
         const sellerResponse = await axios.get(
-          `http://localhost:5000/sellers/${productResponse.data.product.seller}`
+          `${API_BASE_URL}/sellers/${productResponse.data.product.seller}`
         );
         setSeller(sellerResponse.data); // Save seller details
 
         setLoading(false);
       } catch (error) {
-        setErrorMessage("Product or seller not found.");
         setLoading(false);
+        alert("Product or seller not found.");
       }
     };
 
@@ -41,28 +40,22 @@ const ProductDetailsPage = () => {
   // Function to handle adding a product to the cart
   const handleAddToCart = async (productId) => {
     try {
-      setSuccessMessage(""); // Clear previous messages
-      setErrorMessage(""); // Clear previous error messages
-
       if (!token) {
-        setErrorMessage("You must be logged in to add items to your cart.");
+        alert("You must be logged in to add items to your cart.");
         return;
       }
 
       const response = await axios.post(
-        "http://localhost:5000/cart/add",
+        `${API_BASE_URL}/cart/add`,
         { productId, quantity: 1 },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      setSuccessMessage("Product added to cart successfully!");
       alert("Product added to cart successfully!");
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message || "Failed to add product to cart."
-      );
+      alert(error.response?.data?.message || "Failed to add product to cart.");
     }
   };
 
@@ -70,10 +63,6 @@ const ProductDetailsPage = () => {
     return (
       <p className="text-center text-gray-600">Loading product details...</p>
     );
-  }
-
-  if (errorMessage) {
-    return <p className="text-center text-red-600">{errorMessage}</p>;
   }
 
   return (
@@ -150,9 +139,7 @@ const ProductDetailsPage = () => {
 
         {/* Seller Information Section */}
         <div className="pt-6 mt-8 border-t">
-          <h3 className="text-xl font-semibold text-gray-800">
-            Seller Details
-          </h3>
+          <h3 className="text-xl font-semibold text-gray-800">Seller Details</h3>
           <div className="space-y-4">
             <div>
               <strong className="text-gray-600">Seller Name:</strong>
@@ -170,21 +157,10 @@ const ProductDetailsPage = () => {
             </div>
           </div>
         </div>
-
-        {/* Display Success or Error Message */}
-        {successMessage && (
-          <p className="mt-4 text-sm text-center text-green-600">
-            {successMessage}
-          </p>
-        )}
-        {errorMessage && (
-          <p className="mt-4 text-sm text-center text-red-600">
-            {errorMessage}
-          </p>
-        )}
       </div>
     </div>
   );
 };
 
 export default ProductDetailsPage;
+F

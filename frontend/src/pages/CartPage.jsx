@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthContext"; // Assuming you have a context for authentication
 
-const API_BASE_URL = "http://localhost:5000"; // Update this with your API base URL
+import API_BASE_URL from "../const"; // Update this with your API base URL
 
 const CartPage = () => {
   const { token } = useContext(AuthContext); // Get the token from context

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
+import API_BASE_URL from "../const";
 
 const AddProduct = () => {
   const [name, setName] = useState("");
@@ -22,7 +23,7 @@ const AddProduct = () => {
     const productData = { name, description, stock, price, image, category };
 
     try {
-      await axios.post("http://localhost:5000/products/add", productData, {
+      await axios.post(`${API_BASE_URL}/products/add`, productData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Product added successfully!");
@@ -117,10 +118,11 @@ const AddProduct = () => {
               onChange={(e) => setCategory(e.target.value)}
               className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
             >
-              <option value="electronics">Electronics</option>
-              <option value="clothing">Clothing</option>
-              <option value="accessories">Accessories</option>
-              <option value="books">Books</option>
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="kids">Kids</option>
+              <option value="jewellery">Jewellery</option>
+              <option value="footware">Footware</option>
               <option value="others">Others</option>
             </select>
           </div>

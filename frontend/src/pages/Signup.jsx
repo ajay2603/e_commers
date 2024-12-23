@@ -1,5 +1,6 @@
 import react, { useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../const";
 const Signup = () => {
   const [name, setname] = useState("");
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:5000/auth/register", {
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, {
         name,
         email,
         password,
