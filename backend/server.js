@@ -24,6 +24,8 @@ const sellerRoutes = require("./routes/seller");
 app.use("/sellers", sellerRoutes);
 const cartRoutes = require("./routes/cart");
 app.use("/cart", cartRoutes);
+const orderRoutes = require("./routes/order");
+app.use("/orders", orderRoutes);
 
 mongoose
   .connect(process.env.MONGODB_URI)

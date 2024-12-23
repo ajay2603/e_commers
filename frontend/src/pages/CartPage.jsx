@@ -9,6 +9,7 @@ const CartPage = () => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [orderSuccess, setOrderSuccess] = useState(null); // For tracking order success
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -28,6 +29,8 @@ const CartPage = () => {
 
         // Extract the cart products
         const cartData = response.data.products;
+
+        console.log(cartData);
 
         // Fetch product details for each product ID in the cart
         const productDetailsPromises = cartData.map(async (item) => {
@@ -122,6 +125,37 @@ const CartPage = () => {
     }, 0);
   };
 
+  // Handle placing the order
+  const handlePlaceOrder = async () => {
+    try {
+      const products = cart.map((item) => ({
+        product: item.product,
+        quantity: item.quantity,
+      }));
+
+      // Send the products data to the server to place the order
+      const response = await axios.post(
+        `${API_BASE_URL}/orders/place`,
+        { products },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        alert("Order placed successfully!");
+        handleClearCart(); // Clear the cart after successful order
+      } else {
+        setOrderSuccess("Failed to place order.");
+      }
+    } catch (err) {
+      setOrderSuccess("Failed to place order.");
+      console.error(err);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
@@ -197,6 +231,16 @@ const CartPage = () => {
         <div>Total Price: ${getTotalCartPrice().toFixed(2)}</div>
       </div>
 
+      {/* Place Order Button */}
+      <div className="mt-4">
+        <button
+          onClick={handlePlaceOrder}
+          className="px-4 py-2 text-white bg-blue-500 rounded-md"
+        >
+          Place Order
+        </button>
+      </div>
+
       {/* Clear Cart Button */}
       <div className="mt-4">
         <button
@@ -206,6 +250,13 @@ const CartPage = () => {
           Clear Cart
         </button>
       </div>
+
+      {/* Order Success Message */}
+      {orderSuccess && (
+        <div className="mt-4 font-semibold text-center text-green-500">
+          {orderSuccess}
+        </div>
+      )}
     </div>
   );
 };
