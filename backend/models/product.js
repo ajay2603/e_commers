@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["electronics", "clothing", "accessories", "books", "others"],
+    enum: ["men", "women", "kids", "jewellery", "footware", "others"],
     default: "others",
   },
   seller: {
@@ -30,6 +30,7 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+const Product =
+  mongoose.models.Product || mongoose.model("Product", productSchema);
 
 module.exports = Product;

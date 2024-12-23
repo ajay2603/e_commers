@@ -13,10 +13,11 @@ const addProduct = async (req, res) => {
 
     // Category validation: Check if the category is valid
     const validCategories = [
-      "electronics",
-      "clothing",
-      "accessories",
-      "books",
+      "men",
+      "women",
+      "kids",
+      "jewellery",
+      "footware",
       "others",
     ];
     if (category && !validCategories.includes(category)) {
