@@ -4,7 +4,7 @@ import AuthContext from "../context/AuthContext"; // Assuming you have a context
 
 const API_URL = "http://localhost:5000"; // Update this with the correct API URL
 
-const Orders = () => {
+const OrdersReceived = () => {
   const { token } = useContext(AuthContext); // Get the token from context
   const [orders, setOrders] = useState([]); // To store the list of order IDs
   const [orderDetails, setOrderDetails] = useState({}); // To store details of each order
@@ -13,7 +13,7 @@ const Orders = () => {
   useEffect(() => {
     // Fetch orders from /orders/ endpoint
     axios
-      .get(`${API_URL}/orders`, {
+      .get(`${API_URL}/orders/seller`, {
         headers: {
           Authorization: `Bearer ${token}`, // Include the authorization token
         },
@@ -25,7 +25,7 @@ const Orders = () => {
         // Fetch order details for each order ID
         const fetchOrderDetails = orderIds.map((orderId) =>
           axios
-            .get(`${API_URL}/orders/${orderId}`, {
+            .get(`${API_URL}/orders/seller/${orderId}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -168,4 +168,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrdersReceived;

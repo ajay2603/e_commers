@@ -53,4 +53,80 @@ const placeOrder = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder };
+const getOrders = async (req, res) => {
+  try {
+    const orders = await Order.distinct("orderId", { userId: req.user._id });
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
+const getOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const orders = await Order.find({ orderId, userId: req.user._id });
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
+const getSellerOrders = async (req, res) => {
+  try {
+    const orders = await Order.distinct("orderId", { seller: req.user._id });
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
+const getSellerOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const orders = await Order.find({ orderId, seller: req.user._id });
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
+module.exports = {
+  placeOrder,
+  getOrders,
+  getOrder,
+  getSellerOrders,
+  getSellerOrder,
+};
