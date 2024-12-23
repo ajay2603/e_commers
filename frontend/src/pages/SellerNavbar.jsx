@@ -36,9 +36,15 @@ const SellerNavbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/login" className="text-white hover:text-gray-300">
-              Logout
-            </Link>
+            {loggedIn === true ? (
+              <Link to="/login" className="hover:text-gray-300">
+                Logout
+              </Link>
+            ) : (
+              <Link to="/login" className="hover:text-gray-300">
+                Login
+              </Link>
+            )}
           </li>
         </ul>
       </div>

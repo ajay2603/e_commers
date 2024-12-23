@@ -3,6 +3,7 @@ import SellerDashboard from "../pages/SellerDashboard";
 import AddProduct from "../pages/AddProduct";
 import OrdersReceived from "../pages/OrdersReceived";
 import SellerNavbar from "../pages/SellerNavbar";
+
 const SellerRoute = () => {
   const token = localStorage.getItem("token");
 

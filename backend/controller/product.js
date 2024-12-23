@@ -140,4 +140,78 @@ const getProductDetails = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getProducts, getProductDetails };
+const deleteProduct = async (req, res) => {
+  const { id } = req.params; // Product ID from URL
+  const userId = req.user._id; // Seller ID from authenticated user
+
+  try {
+    // Find the product by ID and ensure it belongs to the logged-in seller
+    const product = await Product.findOne({ _id: id, seller: userId });
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: "Product not found or unauthorized access." });
+    }
+
+    // Remove the product
+    await product.remove();
+
+    // Respond with success
+    res.status(200).json({ message: "Product deleted successfully." });
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+const addStock = async (req, res) => {
+  const { id } = req.params; // Product ID from URL
+  const { stock } = req.body; // New stock value from request body
+  const userId = req.user._id; // Seller ID from authenticated user
+
+  try {
+    // Find the product by ID and ensure it belongs to the logged-in seller
+    const product = await Product.findOne({ _id: id, seller: userId });
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: "Product not found or unauthorized access." });
+    }
+
+    // Update the stock value
+    let newStock = product.stock + stock;
+
+    // If the stock is less than 0, set it to 0
+    if (newStock < 0) {
+      newStock = 0;
+    }
+
+    // Update the product's stock in the database
+    product.stock = newStock;
+
+    // Save the updated product
+    await product.save();
+
+    // Respond with success
+    res.status(200).json({ message: "Stock updated successfully.", product });
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  addProduct,
+  getProducts,
+  getProductDetails,
+  deleteProduct,
+  addStock,
+};
