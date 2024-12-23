@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
+import AuthContext from "../context/AuthContext";
 
 const AddProduct = () => {
   const [name, setName] = useState("");
@@ -8,17 +9,13 @@ const AddProduct = () => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [category, setCategory] = useState("others");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const token = localStorage.getItem("token");
+  const { token } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
 
     if (!token) {
-      setErrorMessage("Unauthorized. Please login to add a product.");
+      alert("Unauthorized. Please login to add a product.");
       return;
     }
 
@@ -28,7 +25,7 @@ const AddProduct = () => {
       await axios.post("http://localhost:5000/products/add", productData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSuccessMessage("Product added successfully!");
+      alert("Product added successfully!");
       setName("");
       setDescription("");
       setStock(1);
@@ -36,9 +33,7 @@ const AddProduct = () => {
       setImage("");
       setCategory("others");
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message || "Failed to add product."
-      );
+      alert(error.response?.data?.message || "Failed to add product.");
     }
   };
 
@@ -48,16 +43,6 @@ const AddProduct = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Add Product
         </h2>
-        {errorMessage && (
-          <p className="mt-4 text-sm text-center text-red-600">
-            {errorMessage}
-          </p>
-        )}
-        {successMessage && (
-          <p className="mt-4 text-sm text-center text-green-600">
-            {successMessage}
-          </p>
-        )}
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700">

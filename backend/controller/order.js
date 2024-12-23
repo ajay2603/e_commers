@@ -15,14 +15,22 @@ const placeOrder = async (req, res) => {
       });
     }
 
-    // Create an array of promises for saving orders
+    // Create an array of promises for processing the orders
     const orderPromises = products.map(async (product) => {
       const productDetails = await Product.findById(product.product);
+
       if (!productDetails) {
         throw new Error(`Product with ID ${product.product} not found`);
       }
 
-      // Create an order for each product
+      // Check if sufficient stock is available
+      if (productDetails.stock < product.quantity) {
+        throw new Error(
+          `Insufficient stock for product: ${productDetails.name}. Available: ${productDetails.stock}, Requested: ${product.quantity}`
+        );
+      }
+
+      // Create an order for the product
       const order = new Order({
         orderId: uuid,
         userId: req.user._id,
@@ -34,9 +42,13 @@ const placeOrder = async (req, res) => {
 
       // Save the order
       await order.save();
+
+      // Reduce the stock of the product
+      productDetails.stock -= product.quantity;
+      await productDetails.save();
     });
 
-    // Wait for all orders to be saved
+    // Wait for all orders to be processed
     await Promise.all(orderPromises);
 
     return res.status(201).json({

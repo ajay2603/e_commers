@@ -8,13 +8,11 @@ const CartPage = () => {
   const { token } = useContext(AuthContext); // Get the token from context
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [orderSuccess, setOrderSuccess] = useState(null); // For tracking order success
 
   useEffect(() => {
     const fetchCart = async () => {
       if (!token) {
-        setError("Please login to view your cart.");
+        alert("Please login to view your cart.");
         setLoading(false);
         return;
       }
@@ -29,8 +27,6 @@ const CartPage = () => {
 
         // Extract the cart products
         const cartData = response.data.products;
-
-        console.log(cartData);
 
         // Fetch product details for each product ID in the cart
         const productDetailsPromises = cartData.map(async (item) => {
@@ -52,7 +48,7 @@ const CartPage = () => {
         setCart(cartWithProductDetails);
         setLoading(false);
       } catch (err) {
-        setError("Failed to load cart");
+        alert("Failed to load cart");
         setLoading(false);
       }
     };
@@ -73,8 +69,9 @@ const CartPage = () => {
       setCart((prevCart) =>
         prevCart.filter((item) => item.product !== productId)
       );
+      alert("Item removed from cart");
     } catch (err) {
-      setError("Failed to remove item from cart");
+      alert("Failed to remove item from cart");
     }
   };
 
@@ -97,8 +94,9 @@ const CartPage = () => {
           item.product === productId ? { ...item, quantity } : item
         )
       );
+      alert("Quantity updated");
     } catch (err) {
-      setError("Failed to update quantity");
+      alert(err.response.data.message || "Failed to update quantity");
     }
   };
 
@@ -112,8 +110,9 @@ const CartPage = () => {
 
       // Clear the cart state
       setCart([]);
+      alert("Cart cleared");
     } catch (err) {
-      setError("Failed to clear cart");
+      alert("Failed to clear cart");
     }
   };
 
@@ -148,16 +147,15 @@ const CartPage = () => {
         alert("Order placed successfully!");
         handleClearCart(); // Clear the cart after successful order
       } else {
-        setOrderSuccess("Failed to place order.");
+        alert("Failed to place order.");
       }
     } catch (err) {
-      setOrderSuccess("Failed to place order.");
+      alert("Failed to place order.");
       console.error(err);
     }
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   if (!cart || cart.length === 0) {
     return <div>Your cart is empty</div>;
@@ -250,13 +248,6 @@ const CartPage = () => {
           Clear Cart
         </button>
       </div>
-
-      {/* Order Success Message */}
-      {orderSuccess && (
-        <div className="mt-4 font-semibold text-center text-green-500">
-          {orderSuccess}
-        </div>
-      )}
     </div>
   );
 };
