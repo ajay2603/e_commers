@@ -1,7 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 const Navbar = () => {
+  const { loggedIn, setLoggedIn, setToken } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    setLoggedIn(false);
+    setToken(null);
+    navigate("/", { replace: true });
+  };
+
   return (
     <nav className="text-white bg-blue-500 shadow-md">
       <div className="container flex items-center justify-between p-4 mx-auto">
@@ -27,9 +38,15 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/login" className="hover:text-gray-300">
-              Login
-            </Link>
+            {loggedIn === true ? (
+              <Link onClick={handleLogout} className="hover:text-gray-300">
+                Logout
+              </Link>
+            ) : (
+              <Link to="/login" className="hover:text-gray-300">
+                Login
+              </Link>
+            )}
           </li>
         </ul>
       </div>

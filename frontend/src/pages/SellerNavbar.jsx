@@ -1,7 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 const SellerNavbar = () => {
+  const { loggedIn, setLoggedIn, setToken } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   return (
     <nav className="p-4 bg-blue-500">
       <div className="container flex items-center justify-between mx-auto">
@@ -29,6 +33,11 @@ const SellerNavbar = () => {
               className="text-white transition duration-300 hover:text-gray-300"
             >
               Orders
+            </Link>
+          </li>
+          <li>
+            <Link to="/login" className="text-white hover:text-gray-300">
+              Logout
             </Link>
           </li>
         </ul>

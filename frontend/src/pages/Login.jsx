@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
@@ -35,9 +35,9 @@ const Login = () => {
 
         // Navigate based on the user role
         if (userRole === "consumer") {
-          navigate("/consumer-dashboard");
+          navigate("/", { replace: true });
         } else if (userRole === "seller") {
-          navigate("/seller");
+          navigate("/seller", { replace: true });
         }
       } else {
         setErrorMessage("Invalid role type");
@@ -49,6 +49,16 @@ const Login = () => {
       );
     }
   };
+
+  useEffect(() => {
+    const handleLogout = () => {
+      localStorage.removeItem("authToken");
+      setLoggedIn(false);
+      setToken(null);
+    };
+
+    handleLogout();
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">

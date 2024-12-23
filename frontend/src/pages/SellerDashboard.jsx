@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import AuthContext from "../context/AuthContext";
 
 const SellerDashboard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  const token = localStorage.getItem("token");
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchProducts = async () => {
